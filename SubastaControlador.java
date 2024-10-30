@@ -13,6 +13,7 @@ public class SubastaControlador implements ActionListener, ListSelectionListener
     SubastaVista vista;
     SubastaServicio servicio;  // Interfaz remota
     Hashtable<String, String> listaConPrecios;
+    private boolean usuarioRegistrado = false;  // Variable para verificar si el usuario está registrado
 
     public SubastaControlador(SubastaVista v, SubastaServicio s) {
         vista = v;
@@ -31,14 +32,45 @@ public class SubastaControlador implements ActionListener, ListSelectionListener
                 System.exit(1);
             } else if (evento.getActionCommand().equals("Conectar")) {
                 usuario = vista.getUsuario();
-                System.out.println("Registrarse como usuario: " + usuario);
-                servicio.registraUsuario(usuario);
+                if (usuario == null || usuario.isEmpty()) {
+                    System.out.println("Debe ingresar un nombre de usuario para conectarse.");
+                    return;
+                }
+            
+                // Verificar si el usuario ya está registrado en el sistema antes de intentar registrarlo
+                if (usuarioRegistrado) {
+                    System.out.println("Usuario ya esta conectado como: " + usuario);
+                } else {
+                    System.out.println("Intentando registrar al usuario: " + usuario);
+                    usuarioRegistrado = servicio.registraUsuario(usuario);
+                    if (!usuarioRegistrado) {
+                        System.out.println("El usuario ya esta registrado en el sistema.");
+                    } else {
+                        System.out.println("Usuario registrado con exito: " + usuario);
+                    }
+                }
             } else if (evento.getActionCommand().equals("Poner a la venta")) {
+                if (!usuarioRegistrado) {
+                    System.out.println("Debe registrarse antes de agregar productos.");
+                    return;
+                }
                 usuario = vista.getUsuario();
                 producto = vista.getProducto();
                 monto = vista.getPrecioInicial();
+
+                // Validar nombre del producto y precio
+                if (producto == null || producto.isEmpty()) {
+                    System.out.println("Debe ingresar un nombre para el producto.");
+                    return;
+                }
+                if (monto <= 0) {
+                    System.out.println("Debe ingresar un precio valido para el producto.");
+                    return;
+                }
+
                 System.out.println("Ofertando producto: " + producto);
                 servicio.agregaProductoALaVenta(usuario, producto, monto);
+
             } else if (evento.getActionCommand().equals("Obtener lista")) {
                 Vector<InformacionProducto> lista = servicio.obtieneCatalogo();
                 listaConPrecios = new Hashtable<>();
@@ -48,9 +80,25 @@ public class SubastaControlador implements ActionListener, ListSelectionListener
                     vista.agregaProducto(info.getNombreProducto());
                 }
             } else if (evento.getActionCommand().equals("Ofrecer")) {
+                if (!usuarioRegistrado) {
+                    System.out.println("Debe registrarse antes de hacer una oferta.");
+                    return;
+                }
+                
                 producto = vista.getProductoSeleccionado();
                 monto = vista.getMontoOfrecido();
                 usuario = vista.getUsuario();
+
+                // Validar producto seleccionado y monto de oferta
+                if (producto == null || producto.isEmpty()) {
+                    System.out.println("Debe seleccionar un producto para ofertar.");
+                    return;
+                }
+                if (monto <= 0) {
+                    System.out.println("Debe ingresar un monto valido para la oferta.");
+                    return;
+                }
+
                 servicio.agregaOferta(usuario, producto, monto);
             }
         } catch (RemoteException e) {

@@ -24,10 +24,12 @@ public class SubastaModelo extends UnicastRemoteObject implements SubastaServici
         if (!usuarios.containsKey(nombre)) {
             System.out.println("Agregando un nuevo usuario: " + nombre);
             usuarios.put(nombre, nombre);
-            return true;
+            return true; // Usuario registrado con éxito
         }
-        return false;
+        System.out.println("El usuario ya esta registrado: " + nombre);
+        return false; // Usuario ya existe
     }
+
 
     @Override
     public boolean agregaProductoALaVenta(String vendedor, String producto, float precioInicial) throws RemoteException {

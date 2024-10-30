@@ -1,4 +1,3 @@
-
 public class InformacionProducto implements java.io.Serializable {
 
     String vendedor;
@@ -7,7 +6,6 @@ public class InformacionProducto implements java.io.Serializable {
     float precioActual;
 
     public InformacionProducto( String v, String p, float pi ) {
-
         vendedor = v;
         producto = p;
         precioInicial = pi;
@@ -24,12 +22,10 @@ public class InformacionProducto implements java.io.Serializable {
     }
 
     public String getNombreProducto() {
-
         return producto;
     }
 
     public float getPrecioActual() {
-
         return precioActual;
     }
 }
