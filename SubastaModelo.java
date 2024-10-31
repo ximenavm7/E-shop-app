@@ -1,5 +1,6 @@
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.time.LocalDateTime;
 import java.util.Hashtable;
 import java.util.Vector;
 import java.util.ArrayList;
@@ -51,8 +52,11 @@ public class SubastaModelo extends UnicastRemoteObject implements SubastaServici
         if (productos.containsKey(producto)) {
             InformacionProducto infoProd = productos.get(producto);
             if (infoProd.actualizaPrecio(monto)) {
-                ofertas.put(producto + comprador, new InformacionOferta(comprador, producto, monto));
-                notificarClientes(producto, monto); // Notificar a los clientes
+                InformacionOferta oferta = new InformacionOferta(comprador, producto, monto);
+                ofertas.put(producto + comprador, oferta);
+                notificarClientes(producto, monto, comprador, oferta.getFechaHoraOferta()); // Notificación con detalles completos
+                System.out.println("Nueva oferta realizada por " + comprador + " en el producto " + producto +
+                                " con monto: " + monto + " en fecha y hora: " + oferta.getFechaHoraOferta());
                 return true;
             }
         }
@@ -77,10 +81,10 @@ public class SubastaModelo extends UnicastRemoteObject implements SubastaServici
     }
 
     // Notificar a todos los clientes sobre el cambio de precio de un producto
-    private void notificarClientes(String producto, float nuevoPrecio) {
+    private void notificarClientes(String producto, float nuevoPrecio, String comprador, LocalDateTime fechaHoraOferta) {
         for (ClienteNotificacion cliente : clientesRegistrados) {
             try {
-                cliente.actualizarPrecio(producto, nuevoPrecio);
+                cliente.actualizarOferta(producto, nuevoPrecio, comprador, fechaHoraOferta);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }

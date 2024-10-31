@@ -1,17 +1,5 @@
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-
-import java.awt.Container;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.Dimension;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import javax.swing.event.ListSelectionListener;
 
@@ -31,6 +19,7 @@ public class SubastaVista {
     JButton ponerALaVenta;
     JButton obtenerLista;
     JButton ofrecer;
+    JTextArea detallesOferta;
 
     public SubastaVista() {
 
@@ -88,16 +77,17 @@ public class SubastaVista {
         lista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         lista.setLayoutOrientation(JList.VERTICAL);
         JScrollPane listaScroller = new JScrollPane(lista);
-        listaScroller.setPreferredSize(new Dimension(250, 80));
+        listaScroller.setPreferredSize(new Dimension(250, 80)); // Tamaño preferido de la lista
 
         gbc.gridx = 0;
         gbc.gridy = 5;
-        panel.add(new JLabel("Obtener lista"), gbc);
-        gbc.gridx = 1;
+        gbc.gridwidth = 2; // Tomar dos columnas
         panel.add(listaScroller, gbc);
+
         obtenerLista = new JButton("Obtener lista");
         gbc.gridx = 0;
         gbc.gridy = 6;
+        gbc.gridwidth = 1; // Restablecer a una columna
         panel.add(obtenerLista, gbc);
 
         precioActual = new JLabel();
@@ -115,7 +105,24 @@ public class SubastaVista {
         gbc.gridx = 1;
         panel.add(monto, gbc);
 
-        principal.setSize(400, 400);
+        // Configuración de "Detalles de la última oferta"
+        detallesOferta = new JTextArea(5, 20);
+        detallesOferta.setEditable(false);  // Solo lectura
+        detallesOferta.setLineWrap(true);
+        detallesOferta.setWrapStyleWord(true);
+        JScrollPane detallesScroller = new JScrollPane(detallesOferta);
+        
+        gbc.gridx = 0;
+        gbc.gridy = 9;
+        gbc.gridwidth = 3; // Ocupa tres columnas para alinearlo
+        gbc.fill = GridBagConstraints.BOTH; // Expande el área para ocupar el espacio
+        gbc.weighty = 1.0;  // Permite que ocupe el espacio vertical restante
+        panel.add(new JLabel("Detalles de la ultima oferta"), gbc);
+        
+        gbc.gridy = 10;
+        panel.add(detallesScroller, gbc);  // Agrega el área de texto desplazable
+
+        principal.setSize(400, 600);
         principal.setVisible(true);
         principal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -175,5 +182,12 @@ public class SubastaVista {
 
     public String getProductoSeleccionado() {
         return lista.getSelectedValue();
+    }
+
+    // Método para desplegar los detalles de la oferta
+    public void desplegarDetallesOferta(String detalles) {
+        detallesOferta.setText(detalles);
+        // Borrar lista de productos
+        reinicializaListaProductos();
     }
 }

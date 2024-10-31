@@ -3,7 +3,7 @@ import java.awt.event.ActionEvent;
 import java.rmi.RemoteException;
 import java.util.Hashtable;
 import java.util.Vector;
-import java.util.Enumeration;
+//import java.util.Enumeration;
 import javax.swing.JList;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
@@ -114,6 +114,14 @@ public class SubastaControlador implements ActionListener, ListSelectionListener
                 }
 
                 servicio.agregaOferta(usuario, producto, monto);
+                
+                Vector<InformacionProducto> lista = servicio.obtieneCatalogo();
+                listaConPrecios = new Hashtable<>();
+                vista.reinicializaListaProductos();
+                for (InformacionProducto info : lista) {
+                    listaConPrecios.put(info.getNombreProducto(), String.valueOf(info.getPrecioActual()));
+                    vista.agregaProducto(info.getNombreProducto());
+                }
             }
         } catch (RemoteException e) {
             e.printStackTrace();
