@@ -30,6 +30,11 @@ public class SubastaModelo extends UnicastRemoteObject implements SubastaServici
         return false; // Usuario ya existe
     }
 
+    @Override
+    public boolean estaUsuarioRegistrado(String nombre) throws RemoteException {
+        return usuarios.containsKey(nombre);
+    }
+
 
     @Override
     public boolean agregaProductoALaVenta(String vendedor, String producto, float precioInicial) throws RemoteException {

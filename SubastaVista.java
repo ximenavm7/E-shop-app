@@ -24,6 +24,7 @@ public class SubastaVista {
     JLabel precioActual;
     JList lista;
     JButton conectar;
+    JButton iniciarSesion;
     JButton salir;
     JButton ponerALaVenta;
     JButton obtenerLista;
@@ -42,8 +43,10 @@ public class SubastaVista {
         panel.add( usuario );
 
         conectar = new JButton( "Conectar" );
+        iniciarSesion = new JButton("Iniciar Sesion");
         salir = new JButton( "Salir" );
         panel.add( conectar );
+        panel.add( iniciarSesion );
         panel.add( salir );
 
         producto = new JTextField();
@@ -83,6 +86,7 @@ public class SubastaVista {
     public void asignarActionListener(ActionListener controlador) {
 
         conectar.addActionListener( controlador );
+        iniciarSesion.addActionListener(controlador);
         salir.addActionListener( controlador );
         ponerALaVenta.addActionListener( controlador );
         obtenerLista.addActionListener( controlador );
