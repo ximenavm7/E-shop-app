@@ -1,6 +1,7 @@
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.time.LocalDateTime;
 
 public class SubastaCliente extends UnicastRemoteObject implements ClienteNotificacion {
     private SubastaVista vista;
@@ -29,11 +30,22 @@ public class SubastaCliente extends UnicastRemoteObject implements ClienteNotifi
     }
 
     // Implementación del método de callback
-    @Override
+    /*@Override
     public void actualizarPrecio(String producto, float nuevoPrecio) throws RemoteException {
         System.out.println("Actualizacion recibida para el producto: " + producto + " con nuevo precio: " + nuevoPrecio);
         vista.desplegarPrecio(String.valueOf(nuevoPrecio));
+    }*/
+
+    @Override
+    public void actualizarOferta(String producto, float nuevoPrecio, String comprador, LocalDateTime fechaHoraOferta) throws RemoteException {
+        String detallesOferta = String.format("Producto: %s\nNuevo Precio: %.2f\nComprador: %s\nFecha y Hora: %s",
+                                            producto, nuevoPrecio, comprador, fechaHoraOferta);
+        System.out.println("Actualización recibida: " + detallesOferta);  // Muestra en consola
+
+        // Llama a la vista para mostrar los detalles de la oferta
+        vista.desplegarDetallesOferta(detallesOferta);
     }
+
 
     public static void main(String[] args) {
         try {

@@ -6,6 +6,7 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.JTextArea;
 
 import java.awt.Container;
 import java.awt.GridBagConstraints;
@@ -31,6 +32,7 @@ public class SubastaVista {
     JButton ponerALaVenta;
     JButton obtenerLista;
     JButton ofrecer;
+    JTextArea detallesOferta;
 
     public SubastaVista() {
 
@@ -88,16 +90,17 @@ public class SubastaVista {
         lista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         lista.setLayoutOrientation(JList.VERTICAL);
         JScrollPane listaScroller = new JScrollPane(lista);
-        listaScroller.setPreferredSize(new Dimension(250, 80));
+        listaScroller.setPreferredSize(new Dimension(250, 80)); // Tamaño preferido de la lista
 
         gbc.gridx = 0;
         gbc.gridy = 5;
-        panel.add(new JLabel("Obtener lista"), gbc);
-        gbc.gridx = 1;
+        gbc.gridwidth = 2; // Tomar dos columnas
         panel.add(listaScroller, gbc);
+
         obtenerLista = new JButton("Obtener lista");
         gbc.gridx = 0;
         gbc.gridy = 6;
+        gbc.gridwidth = 1; // Restablecer a una columna
         panel.add(obtenerLista, gbc);
 
         precioActual = new JLabel();
@@ -118,6 +121,11 @@ public class SubastaVista {
         principal.setSize(400, 400);
         principal.setVisible(true);
         principal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        detallesOferta = new JTextArea(5, 20);
+        detallesOferta.setEditable(false);  // Solo lectura
+        panel.add(new JLabel("Detalles de la ultima oferta"));
+        panel.add(detallesOferta);
     }
 
     public void asignarActionListener(ActionListener controlador) {
@@ -175,5 +183,10 @@ public class SubastaVista {
 
     public String getProductoSeleccionado() {
         return lista.getSelectedValue();
+    }
+
+    // Método para desplegar los detalles de la oferta
+    public void desplegarDetallesOferta(String detalles) {
+        detallesOferta.setText(detalles);
     }
 }
