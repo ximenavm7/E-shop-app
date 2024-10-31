@@ -49,6 +49,20 @@ public class SubastaControlador implements ActionListener, ListSelectionListener
                         System.out.println("Usuario registrado con exito: " + usuario);
                     }
                 }
+            } else if (evento.getActionCommand().equals("Iniciar Sesion")) { // Nueva lógica para Iniciar Sesión
+                usuario = vista.getUsuario();
+                if (usuario == null || usuario.isEmpty()) {
+                    System.out.println("Debe ingresar un nombre de usuario para iniciar sesion.");
+                    return;
+                }
+    
+                // Verificar si el usuario ya está registrado
+                if (servicio.estaUsuarioRegistrado(usuario)) { // Usamos el nuevo método del modelo
+                    System.out.println("Inicio de sesion exitoso como: " + usuario);
+                    usuarioRegistrado = true;  // Permitir que el usuario inicie sesión
+                } else {
+                    System.out.println("Usuario no registrado. Por favor, registrese primero.");
+                }
             } else if (evento.getActionCommand().equals("Poner a la venta")) {
                 if (!usuarioRegistrado) {
                     System.out.println("Debe registrarse antes de agregar productos.");
