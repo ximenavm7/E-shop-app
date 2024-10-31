@@ -1,18 +1,5 @@
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.JTextArea;
-
-import java.awt.Container;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.Dimension;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import javax.swing.event.ListSelectionListener;
 
@@ -118,14 +105,26 @@ public class SubastaVista {
         gbc.gridx = 1;
         panel.add(monto, gbc);
 
-        principal.setSize(400, 400);
-        principal.setVisible(true);
-        principal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        // Configuración de "Detalles de la última oferta"
         detallesOferta = new JTextArea(5, 20);
         detallesOferta.setEditable(false);  // Solo lectura
-        panel.add(new JLabel("Detalles de la ultima oferta"));
-        panel.add(detallesOferta);
+        detallesOferta.setLineWrap(true);
+        detallesOferta.setWrapStyleWord(true);
+        JScrollPane detallesScroller = new JScrollPane(detallesOferta);
+        
+        gbc.gridx = 0;
+        gbc.gridy = 9;
+        gbc.gridwidth = 3; // Ocupa tres columnas para alinearlo
+        gbc.fill = GridBagConstraints.BOTH; // Expande el área para ocupar el espacio
+        gbc.weighty = 1.0;  // Permite que ocupe el espacio vertical restante
+        panel.add(new JLabel("Detalles de la ultima oferta"), gbc);
+        
+        gbc.gridy = 10;
+        panel.add(detallesScroller, gbc);  // Agrega el área de texto desplazable
+
+        principal.setSize(400, 600);
+        principal.setVisible(true);
+        principal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     public void asignarActionListener(ActionListener controlador) {
@@ -188,5 +187,7 @@ public class SubastaVista {
     // Método para desplegar los detalles de la oferta
     public void desplegarDetallesOferta(String detalles) {
         detallesOferta.setText(detalles);
+        // Borrar lista de productos
+        reinicializaListaProductos();
     }
 }
